@@ -50,6 +50,7 @@ public class WebWorker {
 		V8Executor mainExecutor = new V8Executor(
 				"var w = new Worker('messageHandler = function(e) { print(e[0]); }');\n"
 						+ "w.postMessage('message to send.');" + "w.postMessage('another message to send.');"
+						+ "while(true) {}"
 						+ "w.terminate();\n") {
 			@Override
 			protected void setup(V8 runtime) {
@@ -57,7 +58,8 @@ public class WebWorker {
 			}
 		};
 		mainExecutor.start();
-		mainExecutor.join();
+		Thread.sleep(5000);
+		mainExecutor.forceTermination();
 	}
 
 	private void configureWorker(V8 runtime) {
